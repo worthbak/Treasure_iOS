@@ -7,19 +7,39 @@
 //
 
 import UIKit
+import MapKit
 
-class ViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+final class MapData: NSObject, MKAnnotation {
+    static let resuseId = "MapData"
+    
+    // minimum MKAnnotation conformance
+    let coordinate: CLLocationCoordinate2D
+    
+    init(_ coordinate: CLLocationCoordinate2D) {
+        self.coordinate = coordinate
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
 }
 
+class ViewController: UIViewController {
+    @IBOutlet var mapView: MKMapView!
+}
+
+extension ViewController: MKMapViewDelegate {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let coordinate = CLLocationCoordinate2D(latitude: 40.0166, longitude: -105.2817)
+        let annotation = MapData(coordinate)
+        mapView.addAnnotation(annotation)
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if let existing = mapView.dequeueReusableAnnotationView(withIdentifier: MapData.resuseId) {
+            existing.annotation = annotation
+            return existing
+        } else {
+            return MKPinAnnotationView(annotation: annotation, reuseIdentifier: MapData.resuseId)
+        }
+    }
+}
