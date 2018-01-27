@@ -9,37 +9,24 @@
 import UIKit
 import MapKit
 
-final class MapData: NSObject, MKAnnotation {
-    static let resuseId = "MapData"
+final class ViewController: UIViewController, MKMapViewDelegate {
     
-    // minimum MKAnnotation conformance
-    let coordinate: CLLocationCoordinate2D
-    
-    init(_ coordinate: CLLocationCoordinate2D) {
-        self.coordinate = coordinate
-    }
-}
-
-class ViewController: UIViewController {
     @IBOutlet var mapView: MKMapView!
-}
-
-extension ViewController: MKMapViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let coordinate = CLLocationCoordinate2D(latitude: 40.0166, longitude: -105.2817)
-        let annotation = MapData(coordinate)
+        let annotation = MKPlacemark(coordinate: coordinate)
         mapView.addAnnotation(annotation)
+        
+        let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        let region = MKCoordinateRegion(center: coordinate, span: span)
+        mapView.setRegion(region, animated: false)
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if let existing = mapView.dequeueReusableAnnotationView(withIdentifier: MapData.resuseId) {
-            existing.annotation = annotation
-            return existing
-        } else {
-            return MKPinAnnotationView(annotation: annotation, reuseIdentifier: MapData.resuseId)
-        }
+        let reuseId = "MKPlacemark-reuse"
+        return mapView.dequeueReusableAnnotationView(withIdentifier: reuseId, for: annotation)
     }
 }
