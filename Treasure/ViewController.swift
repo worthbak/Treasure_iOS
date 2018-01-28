@@ -25,9 +25,4 @@ final class ViewController: UIViewController, MKMapViewDelegate {
         let region = MKCoordinateRegion(center: coordinate, span: span)
         mapView.setRegion(region, animated: false)
     }
-    
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let reuseId = "MKPlacemark-reuse"
-        return mapView.dequeueReusableAnnotationView(withIdentifier: reuseId, for: annotation)
-    }
 }
