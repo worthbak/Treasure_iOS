@@ -17,7 +17,8 @@ final class ViewController: UIViewController, MKMapViewDelegate {
         super.viewDidLoad()
         
         let coordinate = CLLocationCoordinate2D(latitude: 40.0166, longitude: -105.2817)
-        let annotation = MKPlacemark(coordinate: coordinate)
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
         mapView.addAnnotation(annotation)
         
         let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
