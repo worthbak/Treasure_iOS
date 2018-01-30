@@ -9,6 +9,20 @@
 import UIKit
 import MapKit
 
+class CustomOverlay: MKTileOverlay {
+
+    override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
+        let url = URL(string: "http://c.tile.stamen.com/watercolor/\(path.z)/\(path.x)/\(path.y).jpg")!
+        URLSession.shared.dataTask(with: url) { (data, _, err) in
+            if let data = data, let image = UIImage(data: data) {
+                print(image)
+            }
+
+            result(data, err)
+        }.resume()
+    }
+}
+
 final class ViewController: UIViewController {
     
     @IBOutlet var mapView: MKMapView!
@@ -17,8 +31,7 @@ final class ViewController: UIViewController {
         super.viewDidLoad()
         mapView.delegate = self
         
-        let template = "http://tile.openstreetmap.org/{z}/{x}/{y}.png"
-        let overlay = MKTileOverlay(urlTemplate: template)
+        let overlay = CustomOverlay()
         overlay.canReplaceMapContent = true
         mapView.add(overlay, level: .aboveLabels)
         
