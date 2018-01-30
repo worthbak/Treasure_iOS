@@ -14,10 +14,7 @@ class CustomOverlay: MKTileOverlay {
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
         let url = URL(string: "http://c.tile.stamen.com/watercolor/\(path.z)/\(path.x)/\(path.y).jpg")!
         URLSession.shared.dataTask(with: url) { (data, _, err) in
-            if let data = data, let image = UIImage(data: data) {
-                print(image)
-            }
-
+            path.prettyPrint()
             result(data, err)
         }.resume()
     }
