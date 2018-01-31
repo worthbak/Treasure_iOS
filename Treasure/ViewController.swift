@@ -64,17 +64,55 @@ final class ViewController: UIViewController {
 
 extension ViewController: MKMapViewDelegate {
     
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        view.isSelected = false
+        
+        guard let annotation = view.annotation as? MapItem else { return }
+        let placemark = MKPlacemark(coordinate: annotation.coordinate)
+        let item = MKMapItem(placemark: placemark)
+        tappedPoints.append(item)
+        
+        if tappedPoints.count >= 2 {
+            let source = tappedPoints[tappedPoints.count - 2]
+            let destination = tappedPoints[tappedPoints.count - 1]
+            
+            let directionReq = MKDirectionsRequest()
+            directionReq.source = source
+            directionReq.destination = destination
+            directionReq.transportType = .walking
+            MKDirections(request: directionReq).calculate(completionHandler: { (res, err) in
+                if let response = res, let route = response.routes.first {
+                    mapView.add(route.polyline, level: .aboveLabels)
+                }
+            })
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        if let tileOverlay = overlay as? MKTileOverlay {
+            return MKTileOverlayRenderer(tileOverlay: tileOverlay)
+        } else if let polyline = overlay as? MKPolyline {
+            let rend = MKPolylineRenderer(polyline: polyline)
+            rend.strokeColor = .blue
+            rend.lineWidth = 4.0
+            
+            return rend
+        } else {
+            return MKOverlayRenderer()
+        }
+    }
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if let item = annotation as? MapItem {
             if let existing = mapView.dequeueReusableAnnotationView(withIdentifier: "mapItem") {
                 existing.annotation = item
                 existing.image = item.itemType.image
-                existing.clusteringIdentifier = "mapItemClustered"
+//                existing.clusteringIdentifier = "mapItemClustered"
                 return existing
             } else {
                 let new = MKAnnotationView(annotation: annotation, reuseIdentifier: "mapItem")
                 new.image = item.itemType.image
-                new.clusteringIdentifier = "mapItemClustered"
+//                new.clusteringIdentifier = "mapItemClustered"
                 return new
             }
         } else if let cluster = annotation as? MKClusterAnnotation {
@@ -90,14 +128,6 @@ extension ViewController: MKMapViewDelegate {
         } else {
             return nil
         }
-    }
-    
-    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        guard let tileOverlay = overlay as? MKTileOverlay else {
-            return MKOverlayRenderer()
-        }
-        
-        return MKTileOverlayRenderer(tileOverlay: tileOverlay)
     }
 }
 
