@@ -36,6 +36,8 @@ final class ViewController: UIViewController {
     
     @IBOutlet var mapView: MKMapView!
     
+    private var tappedPoints = [MKMapItem]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
