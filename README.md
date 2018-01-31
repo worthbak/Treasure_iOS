@@ -1,7 +1,13 @@
 # Treasure_iOS
-An example app that demonstrates various MapKit techniques.
+An example app that demonstrates various MapKit features. Try to find the treasure! 
 
 The app should build without issue in Xcode 9.x - simply clone or download the repo and open the Xcode project. The original presentation is included in the project at [`./MapKit-presentation.pdf`](./MapKit-presentation.pdf).
+
+## Features
+* Custom map styling (via OpenStreetMap tiles)
+* Custom annotation images
+* Annotation clustering (via MapKit)
+* Walking directions between annotations (to use, simply tap two or more annotations; a route between them will appear on the map)
 
 ## Relevant Links
 See below for several links to topics mentioned in the presentation, as well as some other helpful information about MapKit.
