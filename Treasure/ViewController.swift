@@ -65,6 +65,7 @@ extension ViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard let item = annotation as? MapItem else { return nil }
         if let existing = mapView.dequeueReusableAnnotationView(withIdentifier: "mapItem") {
+            existing.annotation = item
             existing.image = item.itemType.image
             return existing
         } else {
