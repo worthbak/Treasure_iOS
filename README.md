@@ -1,7 +1,7 @@
 # Treasure_iOS
 An example app that demonstrates various MapKit techniques.
 
-The app should build without issue in Xcode 9.x - simply clone or download the repo and open the Xcode project. The original presentation is included in the project at `MapKit-presentation.pdf`.
+The app should build without issue in Xcode 9.x - simply clone or download the repo and open the Xcode project. The original presentation is included in the project at [`./MapKit-presentation.pdf`](./MapKit-presentation.pdf).
 
 ## Relevant Links
 See below for several links to topics mentioned in the presentation, as well as some other helpful information about MapKit.
