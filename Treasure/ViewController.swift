@@ -63,15 +63,30 @@ final class ViewController: UIViewController {
 extension ViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        guard let item = annotation as? MapItem else { return nil }
-        if let existing = mapView.dequeueReusableAnnotationView(withIdentifier: "mapItem") {
-            existing.annotation = item
-            existing.image = item.itemType.image
-            return existing
+        if let item = annotation as? MapItem {
+            if let existing = mapView.dequeueReusableAnnotationView(withIdentifier: "mapItem") {
+                existing.annotation = item
+                existing.image = item.itemType.image
+                existing.clusteringIdentifier = "mapItemClustered"
+                return existing
+            } else {
+                let new = MKAnnotationView(annotation: annotation, reuseIdentifier: "mapItem")
+                new.image = item.itemType.image
+                new.clusteringIdentifier = "mapItemClustered"
+                return new
+            }
+        } else if let cluster = annotation as? MKClusterAnnotation {
+            if let existing = mapView.dequeueReusableAnnotationView(withIdentifier: "clusterView") {
+                existing.annotation = cluster
+                existing.image = #imageLiteral(resourceName: "cluster")
+                return existing
+            } else {
+                let new = MKAnnotationView(annotation: annotation, reuseIdentifier: "clusterView")
+                new.image = #imageLiteral(resourceName: "cluster")
+                return new
+            }
         } else {
-            let new = MKAnnotationView(annotation: annotation, reuseIdentifier: "mapItem")
-            new.image = item.itemType.image
-            return new
+            return nil
         }
     }
     
