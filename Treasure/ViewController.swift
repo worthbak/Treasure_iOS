@@ -42,6 +42,8 @@ final class ViewController: UIViewController {
 extension ViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        // Code left intentionally ugly to show more of the internals.
+        
         if let item = annotation as? MapItem {
             if let existing = mapView.dequeueReusableAnnotationView(withIdentifier: "mapItem") {
                 existing.annotation = item
