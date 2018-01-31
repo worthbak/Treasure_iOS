@@ -9,6 +9,29 @@
 import UIKit
 import MapKit
 
+final class MapItem: NSObject, MKAnnotation {
+    enum ItemType {
+        case treasure, noise
+        
+        var image: UIImage {
+            switch self {
+            case .treasure:
+                return #imageLiteral(resourceName: "treasure")
+            case .noise:
+                return #imageLiteral(resourceName: "noise")
+            }
+        }
+    }
+    
+    let itemType: ItemType
+    let coordinate: CLLocationCoordinate2D
+    
+    init(_ type: ItemType, coordinate: CLLocationCoordinate2D) {
+        itemType = type
+        self.coordinate = coordinate
+    }
+}
+
 final class ViewController: UIViewController {
     
     @IBOutlet var mapView: MKMapView!
@@ -22,8 +45,7 @@ final class ViewController: UIViewController {
         mapView.add(overlay, level: .aboveLabels)
         
         let coordinate = CLLocationCoordinate2D(latitude: 40.0166, longitude: -105.2817)
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinate
+        let annotation = MapItem(.treasure, coordinate: coordinate)
         mapView.addAnnotation(annotation)
         
         let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
@@ -31,8 +53,7 @@ final class ViewController: UIViewController {
         mapView.setRegion(region, animated: false)
         
         for randCoordinate in makeRandomCoordinates(in: region) {
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = randCoordinate
+            let annotation = MapItem(.noise, coordinate: randCoordinate)
             mapView.addAnnotation(annotation)
         }
     }
@@ -40,6 +61,18 @@ final class ViewController: UIViewController {
 }
 
 extension ViewController: MKMapViewDelegate {
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        guard let item = annotation as? MapItem else { return nil }
+        if let existing = mapView.dequeueReusableAnnotationView(withIdentifier: "mapItem") {
+            existing.image = item.itemType.image
+            return existing
+        } else {
+            let new = MKAnnotationView(annotation: annotation, reuseIdentifier: "mapItem")
+            new.image = item.itemType.image
+            return new
+        }
+    }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         guard let tileOverlay = overlay as? MKTileOverlay else {
@@ -49,3 +82,4 @@ extension ViewController: MKMapViewDelegate {
         return MKTileOverlayRenderer(tileOverlay: tileOverlay)
     }
 }
+
