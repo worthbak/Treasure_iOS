@@ -14,6 +14,7 @@
 		1E87F09C201D3D0600663EAC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E87F09A201D3D0600663EAC /* LaunchScreen.storyboard */; };
 		389E10352020BF8F00D2B1BA /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E10342020BF8F00D2B1BA /* Helpers.swift */; };
 		389E10392021448D00D2B1BA /* CustomOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E10382021448D00D2B1BA /* CustomOverlay.swift */; };
+		389E103D2021F7BA00D2B1BA /* MapItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E103C2021F7BA00D2B1BA /* MapItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		1E87F09D201D3D0600663EAC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		389E10342020BF8F00D2B1BA /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		389E10382021448D00D2B1BA /* CustomOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomOverlay.swift; sourceTree = "<group>"; };
+		389E103C2021F7BA00D2B1BA /* MapItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 				1E87F091201D3D0600663EAC /* AppDelegate.swift */,
 				1E87F093201D3D0600663EAC /* ViewController.swift */,
 				389E10382021448D00D2B1BA /* CustomOverlay.swift */,
+				389E103C2021F7BA00D2B1BA /* MapItem.swift */,
 				389E10342020BF8F00D2B1BA /* Helpers.swift */,
 				1E87F095201D3D0600663EAC /* Main.storyboard */,
 				1E87F098201D3D0600663EAC /* Assets.xcassets */,
@@ -142,6 +145,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				389E103D2021F7BA00D2B1BA /* MapItem.swift in Sources */,
 				1E87F094201D3D0600663EAC /* ViewController.swift in Sources */,
 				389E10352020BF8F00D2B1BA /* Helpers.swift in Sources */,
 				1E87F092201D3D0600663EAC /* AppDelegate.swift in Sources */,

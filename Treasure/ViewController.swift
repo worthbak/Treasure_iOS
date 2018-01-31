@@ -9,29 +9,6 @@
 import UIKit
 import MapKit
 
-final class MapItem: NSObject, MKAnnotation {
-    enum ItemType {
-        case treasure, noise
-        
-        var image: UIImage {
-            switch self {
-            case .treasure:
-                return #imageLiteral(resourceName: "treasure")
-            case .noise:
-                return #imageLiteral(resourceName: "noise")
-            }
-        }
-    }
-    
-    let itemType: ItemType
-    let coordinate: CLLocationCoordinate2D
-    
-    init(_ type: ItemType, coordinate: CLLocationCoordinate2D) {
-        itemType = type
-        self.coordinate = coordinate
-    }
-}
-
 final class ViewController: UIViewController {
     
     @IBOutlet var mapView: MKMapView!
@@ -64,6 +41,48 @@ final class ViewController: UIViewController {
 
 extension ViewController: MKMapViewDelegate {
     
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if let item = annotation as? MapItem {
+            if let existing = mapView.dequeueReusableAnnotationView(withIdentifier: "mapItem") {
+                existing.annotation = item
+                existing.image = item.itemType.image
+                existing.clusteringIdentifier = "mapItemClustered" // remove to prevent clustering
+                return existing
+            } else {
+                let new = MKAnnotationView(annotation: annotation, reuseIdentifier: "mapItem")
+                new.image = item.itemType.image
+                new.clusteringIdentifier = "mapItemClustered" // remove to prevent clustering
+                return new
+            }
+        } else if let cluster = annotation as? MKClusterAnnotation {
+            if let existing = mapView.dequeueReusableAnnotationView(withIdentifier: "clusterView") {
+                existing.annotation = cluster
+                existing.image = #imageLiteral(resourceName: "cluster")
+                return existing
+            } else {
+                let new = MKAnnotationView(annotation: annotation, reuseIdentifier: "clusterView")
+                new.image = #imageLiteral(resourceName: "cluster")
+                return new
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        if let tileOverlay = overlay as? MKTileOverlay {
+            return MKTileOverlayRenderer(tileOverlay: tileOverlay)
+        } else if let polyline = overlay as? MKPolyline {
+            let rend = MKPolylineRenderer(polyline: polyline)
+            rend.strokeColor = .blue
+            rend.lineWidth = 4.0
+            
+            return rend
+        } else {
+            return MKOverlayRenderer()
+        }
+    }
+    
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         view.isSelected = false
         
@@ -85,48 +104,6 @@ extension ViewController: MKMapViewDelegate {
                     mapView.add(route.polyline, level: .aboveLabels)
                 }
             })
-        }
-    }
-    
-    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        if let tileOverlay = overlay as? MKTileOverlay {
-            return MKTileOverlayRenderer(tileOverlay: tileOverlay)
-        } else if let polyline = overlay as? MKPolyline {
-            let rend = MKPolylineRenderer(polyline: polyline)
-            rend.strokeColor = .blue
-            rend.lineWidth = 4.0
-            
-            return rend
-        } else {
-            return MKOverlayRenderer()
-        }
-    }
-    
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if let item = annotation as? MapItem {
-            if let existing = mapView.dequeueReusableAnnotationView(withIdentifier: "mapItem") {
-                existing.annotation = item
-                existing.image = item.itemType.image
-//                existing.clusteringIdentifier = "mapItemClustered"
-                return existing
-            } else {
-                let new = MKAnnotationView(annotation: annotation, reuseIdentifier: "mapItem")
-                new.image = item.itemType.image
-//                new.clusteringIdentifier = "mapItemClustered"
-                return new
-            }
-        } else if let cluster = annotation as? MKClusterAnnotation {
-            if let existing = mapView.dequeueReusableAnnotationView(withIdentifier: "clusterView") {
-                existing.annotation = cluster
-                existing.image = #imageLiteral(resourceName: "cluster")
-                return existing
-            } else {
-                let new = MKAnnotationView(annotation: annotation, reuseIdentifier: "clusterView")
-                new.image = #imageLiteral(resourceName: "cluster")
-                return new
-            }
-        } else {
-            return nil
         }
     }
 }
