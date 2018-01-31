@@ -14,7 +14,6 @@ class CustomOverlay: MKTileOverlay {
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
         let url = URL(string: "http://c.tile.stamen.com/watercolor/\(path.z)/\(path.x)/\(path.y).jpg")!
         URLSession.shared.dataTask(with: url) { (data, _, err) in
-            path.prettyPrint()
             result(data, err)
         }.resume()
     }
@@ -40,6 +39,12 @@ final class ViewController: UIViewController {
         let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
         let region = MKCoordinateRegion(center: coordinate, span: span)
         mapView.setRegion(region, animated: false)
+        
+        for randCoordinate in makeRandomCoordinates(in: region) {
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = randCoordinate
+            mapView.addAnnotation(annotation)
+        }
     }
     
 }
